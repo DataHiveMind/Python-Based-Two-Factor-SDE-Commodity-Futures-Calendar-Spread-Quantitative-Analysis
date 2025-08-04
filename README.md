@@ -69,9 +69,7 @@ We model the front- and back-month futures spread
 ,
 
 
-𝑑
-𝑌
-𝑡
+dyt
 =
 𝜇
 𝑌
