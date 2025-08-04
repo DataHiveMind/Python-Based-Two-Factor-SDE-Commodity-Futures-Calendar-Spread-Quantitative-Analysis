@@ -68,6 +68,7 @@ We model the front- and back-month futures spread
 𝑋
 ,
 
+
 𝑑
 𝑌
 𝑡
