@@ -50,8 +50,6 @@ class TestFetchWTIBrentPrices:
         import os
         if os.path.exists(output_file):
             os.remove(output_file)
-        else: 
-            fetch_wti_brent_prices(EIA_API_KEY, OUTPUT_FILE)
     
     def test_fetch_daily_ohlcv_data(self, mocker):
         # Mock the yfinance.download method to return a predefined DataFrame
