@@ -26,7 +26,7 @@ We model the front- and back-month futures spread
 𝑑
 𝑋
 𝑡
-=
+= 
 𝜅
 𝑋
 (
@@ -65,6 +65,7 @@ We model the front- and back-month futures spread
 𝑊
 𝑡
 𝑌
+
 ,
 where 
 𝑋
