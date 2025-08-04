@@ -5,13 +5,10 @@ matplotlib
 seaborn
 statsmodels
 jupyterlab
-pytest
-pytest-cov
 scipy
 requests
 tqdm
 yfinance
 plotly
 pandas-datareader
-os
-json
+
