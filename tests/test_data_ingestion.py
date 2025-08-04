@@ -45,12 +45,40 @@ class TestFetchWTIBrentPrices:
         assert df['WTI_Price'].tolist() == [75.0, 76.0, 77.0]
         assert df['Brent_Price'].tolist() == [75.0, 76.0, 77.0]
         assert df['Date'].tolist() == ['2023-01-01', '2023-01-02', '2023-01-03']
-        
+
         # Clean up the output file after the test
         import os
         if os.path.exists(output_file):
             os.remove(output_file)
         else: 
             fetch_wti_brent_prices(EIA_API_KEY, OUTPUT_FILE)
+    
+    def test_fetch_daily_ohlcv_data(self, mocker):
+        # Mock the yfinance.download method to return a predefined DataFrame
+        mock_data = pd.DataFrame({
+            'Open': [100, 101, 102],
+            'High': [105, 106, 107],
+            'Low': [95, 96, 97],
+            'Close': [104, 105, 106],
+            'Volume': [1000, 1100, 1200]
+        }, index=pd.date_range(start='2023-01-01', periods=3))
+
+        mocker.patch('yfinance.download', return_value=mock_data)
+
+        # Call the function with mock parameters
+        tickers = ['AAPL', 'GOOGL']
+        start_date = '2023-01-01'
+        end_date = '2023-01-03'
+        
+        df = fetch_daily_ohlcv_data(tickers, start_date, end_date)
+
+        # Check if the DataFrame has the expected columns and data
+        assert list(df.columns) == ['Open', 'High', 'Low', 'Close', 'Volume']
+        assert len(df) == 3
+        assert df['Open'].tolist() == [100, 101, 102]
+        assert df['Close'].tolist() == [104, 105, 106]
+
+        # Clean up the mock data after the test
+        del mock_data 
 
     
