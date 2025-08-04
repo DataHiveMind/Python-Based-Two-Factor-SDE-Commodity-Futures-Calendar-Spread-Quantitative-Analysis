@@ -6,7 +6,7 @@ Commodity futures term structures exhibit rich dynamics driven by mean-reversion
 
 At a senior quantitative level, we pose the following challenge:
 
-We model the front- and back-month futures spread 
+We model the front-month and back-month futures spread 
 𝑆
 𝑡
 =
