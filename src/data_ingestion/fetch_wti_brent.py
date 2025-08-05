@@ -61,7 +61,10 @@ def fetch_daily_ohlcv_data(tickers: list, start_date: str, end_date: str) -> pd.
     - pd.DataFrame: DataFrame containing OHLCV data.
     """
     data = yf.download(tickers, start=start_date, end=end_date)
-    data = data.reset_index()  # Reset index to have 'Date' as a column
+    if data is not None:
+        data = data.reset_index()  # Reset index to have 'Date' as a column
+    else:
+        data = pd.DataFrame()  # Return empty DataFrame if no data fetched
     return data
 
 #---------------------------------------------------------------------

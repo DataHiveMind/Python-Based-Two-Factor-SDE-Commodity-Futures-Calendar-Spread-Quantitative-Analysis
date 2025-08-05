@@ -8,13 +8,13 @@ Aim: This script tests the data ingestion functionality by mocking the EIA API r
 import pytest 
 import pandas as pd
 from src.data_ingestion.fetch_wti_brent import fetch_wti_brent_prices   
-
+from src.data_ingestion.fetch_wti_brent import fetch_daily_ohlcv_data
 #---------------------------------------------------------------------
 # TestFetchWTIBrentPrices class
 # This class contains pytest for the fetch_wti_brent_prices function
 #---------------------------------------------------------------------
 
-class TestFetchWTIBrentPrices:
+class Test_Data_Ingestion:
     def test_fetch_wti_brent_prices(self, mocker):
         # Mock the requests.get method to return a predefined response
         mock_response = {
@@ -50,33 +50,36 @@ class TestFetchWTIBrentPrices:
         import os
         if os.path.exists(output_file):
             os.remove(output_file)
+
+    #---------------------------------------------------------------------
+    # TestFetchDailyOHLCVData class
+    # This class contains pytest for the fetch_daily_ohlcv_data function
+    #---------------------------------------------------------------------
     
-    def test_fetch_daily_ohlcv_data(self, mocker):
-        # Mock the yfinance.download method to return a predefined DataFrame
-        mock_data = pd.DataFrame({
-            'Open': [100, 101, 102],
-            'High': [105, 106, 107],
-            'Low': [95, 96, 97],
-            'Close': [104, 105, 106],
-            'Volume': [1000, 1100, 1200]
-        }, index=pd.date_range(start='2023-01-01', periods=3))
+        def test_fetch_daily_ohlcv_data(self, mocker):
+            # Mock the yfinance.download method to return a predefined DataFrame
+            mock_data = pd.DataFrame({
+                'Open': [100, 101, 102],
+                'High': [105, 106, 107],
+                'Low': [95, 96, 97],
+                'Close': [104, 105, 106],
+                'Volume': [1000, 1100, 1200]
+            }, index=pd.date_range(start='2023-01-01', periods=3))
 
-        mocker.patch('yfinance.download', return_value=mock_data)
+            mocker.patch('yfinance.download', return_value=mock_data)
 
-        # Call the function with mock parameters
-        tickers = ['AAPL', 'GOOGL']
-        start_date = '2023-01-01'
-        end_date = '2023-01-03'
+            # Call the function with mock parameters
+            tickers = ['AAPL', 'GOOGL']
+            start_date = '2023-01-01'
+            end_date = '2023-01-03'
         
-        df = fetch_daily_ohlcv_data(tickers, start_date, end_date)
+            df = fetch_daily_ohlcv_data(tickers, start_date, end_date)
 
-        # Check if the DataFrame has the expected columns and data
-        assert list(df.columns) == ['Open', 'High', 'Low', 'Close', 'Volume']
-        assert len(df) == 3
-        assert df['Open'].tolist() == [100, 101, 102]
-        assert df['Close'].tolist() == [104, 105, 106]
+            # Check if the DataFrame has the expected columns and data
+            assert list(df.columns) == ['Open', 'High', 'Low', 'Close', 'Volume']
+            assert len(df) == 3
+            assert df['Open'].tolist() == [100, 101, 102]
+            assert df['Close'].tolist() == [104, 105, 106]
 
-        # Clean up the mock data after the test
-        del mock_data 
-
-    
+            # Clean up the mock data after the test
+            del mock_data 
