@@ -11,4 +11,7 @@ tqdm
 yfinance
 plotly
 pandas-datareader
-
+xgboost
+lightgbm
+torch
+torchvision

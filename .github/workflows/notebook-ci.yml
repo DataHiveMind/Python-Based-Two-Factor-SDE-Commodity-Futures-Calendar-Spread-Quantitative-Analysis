@@ -1,0 +1,60 @@
+name: Notebook CI
+
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 1 * * *'
+
+jobs:
+  notebook-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install papermill jupytext nbqa
+
+      - name: Sync notebooks via Jupytext
+        run: jupytext --sync notebooks/
+
+      - name: Execute all notebooks
+        run: |
+          mkdir -p executed
+          for nb in notebooks/*.ipynb; do
+            papermill $nb executed/$(basename $nb)
+          done
+
+      - name: Lint notebooks with nbqa
+        run: nbqa flake8 notebooks
+
+      - name: Run pytest
+        run: pytest
+
+      - name: Commit executed notebooks
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "ci: update executed notebooks"
+          file_pattern: executed/*.ipynb
+          branch: main
